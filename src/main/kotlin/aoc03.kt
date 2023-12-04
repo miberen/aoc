@@ -26,7 +26,7 @@ fun getPart31() : Int {
             if(index < input.count()-1) {
                 searchString += getSearchString(it.range, input[index+1])
             }
-            if(specialSignRegex.findAll(searchString).count() > 0){
+            if(specialSignRegex.find(searchString) != null){
                 sum += it.value.toInt()
             }
         }
