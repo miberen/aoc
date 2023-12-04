@@ -1,6 +1,4 @@
 import java.io.File
-import java.lang.StringBuilder
-import kotlin.math.exp
 
 fun main(args: Array<String>) {
     println(getPart31())
@@ -38,7 +36,7 @@ fun getPart31() : Int {
 }
 
 fun getPart32(): Int {
-    val input = File("input03demo.txt").readLines()
+    val input = File("input03.txt").readLines()
     val numberRegex = Regex("\\d+")
     val gearRegex = Regex("\\*")
     var sum = 0
@@ -48,26 +46,20 @@ fun getPart32(): Int {
         val gears = gearRegex.findAll(s).toList()
 
         gears.forEach {
-            var searchString : String
-            var numMatches: Sequence<MatchResult>
-            var numbers = mutableListOf<Int>()
+            var searchStrings = mutableListOf<String>()
+            val numbers = mutableListOf<Int>()
 
-            if(lastString.isNotEmpty()) {
-                searchString = getSearchString(it.range, lastString)
-                numMatches = numberRegex.findAll(searchString)
-                numbers.addAll(numMatches.map { num -> expandNumber(num.range, lastString) })
+            if(lastString.isNotEmpty())
+                searchStrings.add(getSearchString(it.range, lastString, true))
+
+            searchStrings.add(getSearchString(it.range, s, true))
+
+            if(index < input.count()-1)
+                searchStrings.add(getSearchString(it.range, input[index+1], true))
+
+            searchStrings.forEach {searchString ->
+                numbers.addAll(numberRegex.findAll(searchString).map { num -> num.value.toInt() })
             }
-
-            searchString = getSearchString(it.range, s)
-            numMatches = numberRegex.findAll(searchString)
-            numbers.addAll(numMatches.map { num -> expandNumber(num.range,  s) })
-
-            if(index < input.count()-1) {
-                searchString = getSearchString(it.range, input[index+1])
-                numMatches = numberRegex.findAll(searchString)
-                numbers.addAll(numMatches.map { num -> expandNumber(num.range, input[index+1]) })
-            }
-
 
             if(numbers.count() == 2){
                 sum += numbers.first() * numbers.last()
@@ -78,30 +70,30 @@ fun getPart32(): Int {
     return sum
 }
 
-fun getSearchString(range : IntRange, input : String) : String {
-    return input.substring(IntRange(0.coerceAtLeast(range.first-1), (input.count()-1).coerceAtMost(range.last+1)))
-}
+fun getSearchString(range : IntRange, input : String, expand: Boolean = false) : String {
+    var searchRange = IntRange(0.coerceAtLeast(range.first-1), (input.length-1).coerceAtMost(range.last+1))
+    if(expand){
+        var min = range.first
+        var max = range.last
 
-fun expandNumber(range : IntRange, input : String,) : Int {
-    var min = range.first
-    var max = range.last
-    if(min != 0){
         var endFound = false
-        while (!endFound) {
+        while (!endFound && min > 0) {
             if(input[min-1].isDigit())
                 min--
             else
                 endFound = true
         }
-    }
-    if(max < input.length){
-        var endFound = false
-        while (!endFound) {
+        endFound = false
+        while (!endFound && max < input.length-1) {
             if(input[max+1].isDigit())
                 max++
             else
                 endFound = true
         }
+        searchRange = IntRange(min, max)
     }
-    return input.substring(min, max).toInt()
+
+
+    return input.substring(searchRange)
 }
+
