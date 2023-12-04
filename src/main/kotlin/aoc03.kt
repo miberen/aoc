@@ -5,7 +5,6 @@ fun main(args: Array<String>) {
     println(getPart32())
 }
 
-
 fun getPart31() : Int {
     val input = File("input03.txt").readLines()
     val numberRegex = Regex("\\d+")

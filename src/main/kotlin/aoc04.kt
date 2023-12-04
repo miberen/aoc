@@ -6,18 +6,20 @@ fun main(args: Array<String>) {
     println(getPart42())
 }
 
-
 fun getPart41(): Int {
     val input = File("input04.txt").readLines()
     val sum = input.sumOf { card ->
-        card.split(":").last().split("|").map { x -> x.trim().replace("  ", " ").split(" ") }.zipWithNext()
+        card.substringAfter(":")
+            .split("|")
+            .map { x ->
+                x.trim().replace("  ", " ").split(" ")
+            }
+            .zipWithNext()
             .map { (winning, scratch) ->
                 val count = winning.intersect(scratch.toSet()).count()
 
-                if (count > 0)
-                    multiply(count, 1)
-                else
-                    0
+                if (count > 0) multiply(count, 1)
+                else 0
             }.first()
     }
 
@@ -47,7 +49,7 @@ fun getPart42(): Int {
             .toMap().toMutableMap()
 
     val cardValues = input.map { card ->
-        card.split(":").last()
+        card.substringAfter(":")
             .split("|")
             .map { x ->
                 x.trim().replace("  ", " ").split(" ")
