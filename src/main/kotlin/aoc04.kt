@@ -5,7 +5,6 @@ fun main(args: Array<String>) {
     println(getPart41())
     println(getPart42())
 }
-
 fun getPart41(): Int {
     val input = File("input04.txt").readLines()
     val sum = input.sumOf { card ->
@@ -18,29 +17,12 @@ fun getPart41(): Int {
             .map { (winning, scratch) ->
                 val count = winning.intersect(scratch.toSet()).count()
 
-                if (count > 0) multiply(count, 1)
+                if (count > 0) 2f.pow(count-1).toInt()
                 else 0
             }.first()
     }
-
     return sum
 }
-
-fun multiply(matchCount: Int, number: Int): Int {
-    if (matchCount == 1) return number
-
-    return multiply(matchCount - 1, number * 2)
-}
-
-fun calcCard(index: Int, scoreMap: MutableMap<Int, Int>, cardValues: List<Int>) {
-    if (index == cardValues.count()) return
-
-    for (i in 1..cardValues[index]) {
-        scoreMap[index + i] = scoreMap[index + i]!! + scoreMap[index]!!
-    }
-    calcCard(index + 1, scoreMap, cardValues)
-}
-
 fun getPart42(): Int {
     val input = File("input04.txt").readLines()
     val scoreMap =
@@ -48,7 +30,7 @@ fun getPart42(): Int {
             .zip(List(input.count()) { 1 })
             .toMap().toMutableMap()
 
-    val cardValues = input.map { card ->
+    input.map { card ->
         card.substringAfter(":")
             .split("|")
             .map { x ->
@@ -58,9 +40,10 @@ fun getPart42(): Int {
             .sumOf { (winning, scratch) ->
                 winning.intersect(scratch.toSet()).count()
             }
+    }.forEachIndexed { index, i ->
+        for (x in 1..i) {
+            scoreMap[index + x] = scoreMap[index + x]!! + scoreMap[index]!!
+        }
     }
-
-    calcCard(0, scoreMap, cardValues)
     return scoreMap.values.sum()
 }
-
