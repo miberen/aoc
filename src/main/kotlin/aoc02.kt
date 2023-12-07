@@ -25,7 +25,7 @@ fun getPart22(): Int {
     val input = File("input02.txt").readText()
     val re = Regex("\\d* [brg]")
     var sum = 0
-    input.lines().forEachIndexed outer@{ index, line ->
+    input.lines().forEachIndexed { index, line ->
         val res = re.findAll(line).map { Pair(it.value.substringBefore(' ').trim().toInt(), it.value.last()) }.sortedByDescending { it.first }.toList()
         val red = res.find { it.second == 'r' }?.first ?: 1
         val green = res.find { it.second == 'g' }?.first ?: 1

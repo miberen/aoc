@@ -95,4 +95,3 @@ fun getSearchString(range : IntRange, input : String, expand: Boolean = false) :
 
     return input.substring(searchRange)
 }
-
