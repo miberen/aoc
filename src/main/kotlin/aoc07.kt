@@ -1,61 +1,62 @@
 import java.io.File
 
+val cardValues = mapOf(
+    "T" to "V",
+    "J" to "W",
+    "Q" to "X",
+    "K" to "Y",
+    "A" to "Z",
+) + ('2'..'9').map{it.toString()}.
+zip(('B'..'I').map{it.toString()})
 
 fun main(args: Array<String>) {
     println(getPart71())
     println(getPart72())
 }
-val de = 0xA
-
-val cardValues = mapOf(
-    "T" to "10",
-    "J" to "11",
-    "Q" to "12",
-    "K" to "13",
-    "A" to "14",
-) //+ (1..9).map { it.toString() }.associateWith { it }
-
-
-fun String.handToInt() : Int {
-    return cardValues.entries.fold(this) { acc, (key, value) -> acc.replace(key, value)}.toInt()
-}
-
-fun calcHand(hand : String) : Pair<Int, Int> {
-    val cardSetCount = hand.toSet().count()
-    if (cardSetCount == 1) //Five of a kind
-        return Pair(hand.handToInt(), 0)
-
-    val cardGroup = hand.groupingBy { it }.eachCount()
-
-    if (cardGroup.filter { it.value == 4 }.isNotEmpty()) //Four of a kind
-        return Pair(hand.handToInt(), 1)
-    if (cardSetCount == 2) //Full house (Must be placed after four of a kind check, or it could give false answers)
-        return Pair(hand.handToInt(), 2)
-    if (cardGroup.filter { it.value == 3 }.isNotEmpty()) //Three of a kind
-        return Pair(hand.handToInt(), 3)
-    if (cardSetCount == 3) //Two pair
-        return Pair(hand.handToInt(), 4)
-    if(cardSetCount == 4) //One pair
-        return Pair(hand.handToInt(), 5)
-    else //High card
-        return Pair(hand.handToInt(), 6)
-}
-
-
 fun getPart71(): Int {
-    val input = File("input07demo.txt").readLines().map { it.split(" ").zipWithNext().first() }
-    var sum = 0
-    val calculatedHands = input.map {
-        val (handInt, type) = calcHand(it.first)
-        Triple(it.first, type, it.second.toInt())
-    }.sortedWith(compareByDescending<Triple<String, Int, Int>> { it.second }.thenByDescending { it.first } )
-
-    return calculatedHands.mapIndexed { index, triple -> (1+index) * triple.third }.sum()
+    val input = File("input07.txt").readLines().map { it.split(" ").zipWithNext().first() }
+    return calcAllHands(input, cardValues, false)
 }
 
 fun getPart72(): Int {
-    val input = File("input07demo.txt").readText()
-    return 0
+    val input = File("input07.txt").readLines().map { it.split(" ").zipWithNext().first() }
+    val cardValuesJokerRules = cardValues.mapValues { it.value.replace("W", "A") }
+    return calcAllHands(input, cardValuesJokerRules, true)
+}
+fun calcAllHands(hands : List<Pair<String, String>>, cardValues : Map<String, String>, jokerRules : Boolean) : Int {
+    val calculatedHands = hands.map {
+        Triple(getHandType(it.first, jokerRules), it.first.convertHand(cardValues), it.second.toInt())
+    }.sortedWith(compareByDescending<Triple<Int, String, Int>> { it.first }.thenBy{ it.second } )
+
+    return calculatedHands.mapIndexed { index, triple ->
+        (1+index) * triple.third }.sum()
 }
 
+fun String.convertHand(map : Map<String, String>) : String {
+    return this.map { it.toString() }.joinToString(separator = "") { map[it]!!}
+}
 
+fun getHandType(hand : String, jokerRules: Boolean) : Int {
+    val cardGroup = hand.groupingBy { it }.eachCount().map { Pair(it.key, it.value) }.sortedByDescending { it.second }.toMutableList()
+
+    if(jokerRules){
+        val jokerCount = cardGroup.find{it.first == 'J'}
+        if(jokerCount != null && jokerCount.second != 5){
+            cardGroup.remove(jokerCount)
+            val (type, count) = cardGroup[0]
+            cardGroup[0] = Pair(type, count+jokerCount.second)
+        }
+    }
+
+    val cardTypeCount = cardGroup.count()
+
+    return when {
+        cardTypeCount == 1 -> 0 // Five of a kind
+        cardGroup.any { it.second == 4 } -> 1 //Four of a kind
+        cardTypeCount == 2 -> 2 //Full house (Must be placed after four of a kind check, or it could give false answers)
+        cardGroup.any { it.second == 3 } -> 3 //Three of a kind
+        cardTypeCount == 3 -> 4 //Two pair
+        cardTypeCount == 4 -> 5 //One pair
+        else -> 6 //High card
+    }
+}
