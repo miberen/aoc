@@ -1,28 +1,41 @@
-import java.awt.Point
+
 import java.io.File
 import kotlin.math.abs
 
 fun main(args: Array<String>) {
     val input = File("input11.txt").readText().lines()
 
-    println(getPart111(duplicateDots(input)))
-    println(getPart112(duplicateDots(input, true)))
+    println(getPart111(input))
+    println(getPart112(input))
 }
 fun getPart111(input : List<String>): Long {
-    val starList = input.flatMapIndexed { index, line ->
+    val starList = getStarList(input)
+    return getAllPointPairs(starList).sumOf { points ->
+        abs(abs(points.first.y-points.second.y) + abs(points.first.x-points.second.x))
+    }
+}
+fun getPart112(input : List<String>): Long {
+    val starList = getStarList(input, true)
+    return getAllPointPairs(starList).sumOf { points ->
+        abs(abs(points.first.y-points.second.y) + abs(points.first.x-points.second.x))
+    }
+}
+data class Point(val x: Long, val y: Long) {
+    constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
+}
+fun getStarList(input: List<String>, oldUniverse: Boolean = false): List<Point> {
+    return input.flatMapIndexed { index, line ->
+        val expansionY = getExpansionY(input, index, oldUniverse)
         line.mapIndexed {cIndex, char ->
-            if(char == '#') Point(cIndex, index)
+            if(char == '#'){
+                val expansionX = getExpansionX(input, cIndex, oldUniverse)
+                Point(cIndex + expansionX, index+expansionY)
+            }
             else null
         }.filterNotNull()
     }
-    return getAllPointPairs(starList).sumOf { points ->
-        abs(abs(points.first.y-points.second.y) + abs(points.first.x-points.second.x))
-    }.toLong()
 }
-fun getPart112(input : List<String>): Int {
 
-    return 0
-}
 fun getAllPointPairs(points: List<Point>): List<Pair<Point, Point>> {
     return points.flatMapIndexed { index, point1 ->
         points.subList(index + 1, points.size).map { point2 ->
@@ -30,26 +43,16 @@ fun getAllPointPairs(points: List<Point>): List<Pair<Point, Point>> {
         }
     }
 }
-fun duplicateDots(input: List<String>, oldUniverse : Boolean = false): List<String> {
-    var output = mutableListOf<String>()
-    //rows
-    input.forEach {line ->
-        if(line.all { it == '.' }) {
-            if(oldUniverse) output.add(line)
-            else output.addAll(List(2) {line})
-        }
-        else output.add(line)
-    }
-    //Columns
-    output = rot90Deg(output)
-    rot90Deg(input).forEachIndexed { index, line ->
-        if(line.all { it == '.' }) {
-            val offset = index + (output.count() - input.count())
-            if(oldUniverse) output.addAll(offset, List(1000000) { output[offset] })
-            else output.add(offset, output[offset])
-        }
-    }
-    return rot90Deg(rot90Deg(rot90Deg(output)))
+fun getExpansionX(input: List<String>, currentPoint : Int, oldUniverse : Boolean ): Int {
+    return getExpansionY(rot90Deg(input), currentPoint, oldUniverse)
+
+}
+
+fun getExpansionY(input: List<String>, currentPoint : Int, oldUniverse : Boolean): Int {
+    val count = input.filterIndexed { index, s ->
+        s.all { it == '.' } && index < currentPoint
+    }.count()
+    return count * if(oldUniverse) 999999 else 1
 }
 
 
