@@ -1,4 +1,4 @@
-
+package main.kotlin
 import java.io.File
 import kotlin.math.abs
 
@@ -8,13 +8,13 @@ fun main(args: Array<String>) {
     println(getPart111(input))
     println(getPart112(input))
 }
-fun getPart111(input : List<String>): Long {
+private fun getPart111(input : List<String>): Long {
     val starList = getStarList(input)
     return getAllPointPairs(starList).sumOf { points ->
         abs(abs(points.first.y-points.second.y) + abs(points.first.x-points.second.x))
     }
 }
-fun getPart112(input : List<String>): Long {
+private fun getPart112(input : List<String>): Long {
     val starList = getStarList(input, true)
     return getAllPointPairs(starList).sumOf { points ->
         abs(abs(points.first.y-points.second.y) + abs(points.first.x-points.second.x))
@@ -23,7 +23,7 @@ fun getPart112(input : List<String>): Long {
 data class Point(val x: Long, val y: Long) {
     constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
 }
-fun getStarList(input: List<String>, oldUniverse: Boolean = false): List<Point> {
+private fun getStarList(input: List<String>, oldUniverse: Boolean = false): List<Point> {
     return input.flatMapIndexed { index, line ->
         val expansionY = getExpansionY(input, index, oldUniverse)
         line.mapIndexed {cIndex, char ->
@@ -36,19 +36,19 @@ fun getStarList(input: List<String>, oldUniverse: Boolean = false): List<Point> 
     }
 }
 
-fun getAllPointPairs(points: List<Point>): List<Pair<Point, Point>> {
+private fun getAllPointPairs(points: List<Point>): List<Pair<Point, Point>> {
     return points.flatMapIndexed { index, point1 ->
         points.subList(index + 1, points.size).map { point2 ->
             Pair(point1, point2)
         }
     }
 }
-fun getExpansionX(input: List<String>, currentPoint : Int, oldUniverse : Boolean ): Int {
+private fun getExpansionX(input: List<String>, currentPoint : Int, oldUniverse : Boolean ): Int {
     return getExpansionY(rot90Deg(input), currentPoint, oldUniverse)
 
 }
 
-fun getExpansionY(input: List<String>, currentPoint : Int, oldUniverse : Boolean): Int {
+private fun getExpansionY(input: List<String>, currentPoint : Int, oldUniverse : Boolean): Int {
     val count = input.filterIndexed { index, s ->
         s.all { it == '.' } && index < currentPoint
     }.count()
@@ -56,7 +56,7 @@ fun getExpansionY(input: List<String>, currentPoint : Int, oldUniverse : Boolean
 }
 
 
-fun rot90Deg(strings: List<String>): MutableList<String>  {
+private fun rot90Deg(strings: List<String>): MutableList<String>  {
     val maxLength = strings.maxOfOrNull { it.length } ?: return mutableListOf()
     return (0 until maxLength).map { i ->
         strings.map { it.getOrNull(i) ?: ' ' }.reversed().joinToString("")

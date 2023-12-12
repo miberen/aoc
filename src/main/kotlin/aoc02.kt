@@ -1,6 +1,6 @@
+package main.kotlin
+
 import java.io.File
-import java.util.Dictionary
-import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     println(getPart21())
@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
 }
 
 
-fun getPart21() : Int {
+private fun getPart21() : Int {
     val input = File("input02.txt").readText()
     val re = Regex("\\d* [brg]")
     var sum = 0
@@ -21,7 +21,7 @@ fun getPart21() : Int {
     return sum
 }
 
-fun getPart22(): Int {
+private fun getPart22(): Int {
     val input = File("input02.txt").readText()
     val re = Regex("\\d* [brg]")
     var sum = 0

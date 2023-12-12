@@ -1,3 +1,5 @@
+package main.kotlin
+
 import java.io.File
 import kotlin.math.pow
 
@@ -5,7 +7,7 @@ fun main(args: Array<String>) {
     println(getPart41())
     println(getPart42())
 }
-fun getPart41(): Int {
+private fun getPart41(): Int {
     val input = File("input04.txt").readLines()
     val sum = input.sumOf { card ->
         card.substringAfter(":")
@@ -23,7 +25,7 @@ fun getPart41(): Int {
     }
     return sum
 }
-fun getPart42(): Int {
+private fun getPart42(): Int {
     val input = File("input04.txt").readLines()
     val scoreMap =
         (0..input.count())

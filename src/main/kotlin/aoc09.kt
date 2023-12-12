@@ -1,14 +1,13 @@
+package main.kotlin
+
 import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.math.abs
-import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     println(getPart91())
     println(getPart92())
 }
 
-fun getPart91(): Long {
+private fun getPart91(): Long {
     val input = File("input09.txt")
         .readLines()
         .map { line ->
@@ -24,7 +23,7 @@ private fun extrapolateLine(line : List<Long>, reverse : Boolean = false) : Long
 }
 
 
-fun getPart92(): Long {
+private fun getPart92(): Long {
     val input = File("input09.txt")
         .readLines()
         .map { line ->

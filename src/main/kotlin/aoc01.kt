@@ -1,3 +1,5 @@
+package main.kotlin
+
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -13,7 +15,7 @@ fun main(args: Array<String>) {
     println(getPart2())
 }
 
-fun getPart1() : Int {
+private fun getPart1() : Int {
     var sum = 0
     val re = Regex("[^0-9]")
     File("input01.txt").forEachLine {
@@ -24,7 +26,7 @@ fun getPart1() : Int {
     return sum
 }
 
-fun getPart2(): Int {
+private fun getPart2(): Int {
     var sum = 0
     val collection = digitMap.keys + digitMap.values
     File("input01.txt").forEachLine { line ->
@@ -37,7 +39,7 @@ fun getPart2(): Int {
     return sum
 }
 
-val digitMap = mapOf(
+private val digitMap = mapOf(
     "one" to "1",
     "two" to "2",
     "three" to "3",

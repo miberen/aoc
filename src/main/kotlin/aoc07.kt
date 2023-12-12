@@ -1,3 +1,5 @@
+package main.kotlin
+
 import java.io.File
 
 val cardValues = mapOf(
@@ -13,17 +15,17 @@ fun main(args: Array<String>) {
     println(getPart71())
     println(getPart72())
 }
-fun getPart71(): Int {
+private fun getPart71(): Int {
     val input = File("input07.txt").readLines().map { it.split(" ").zipWithNext().first() }
     return calcAllHands(input, cardValues, false)
 }
 
-fun getPart72(): Int {
+private fun getPart72(): Int {
     val input = File("input07.txt").readLines().map { it.split(" ").zipWithNext().first() }
     val cardValuesJokerRules = cardValues.mapValues { it.value.replace("W", "A") }
     return calcAllHands(input, cardValuesJokerRules, true)
 }
-fun calcAllHands(hands : List<Pair<String, String>>, cardValues : Map<String, String>, jokerRules : Boolean) : Int {
+private fun calcAllHands(hands : List<Pair<String, String>>, cardValues : Map<String, String>, jokerRules : Boolean) : Int {
     val calculatedHands = hands.map {
         Triple(getHandType(it.first, jokerRules), it.first.convertHand(cardValues), it.second.toInt())
     }.sortedWith(compareByDescending<Triple<Int, String, Int>> { it.first }.thenBy{ it.second } )
@@ -32,11 +34,11 @@ fun calcAllHands(hands : List<Pair<String, String>>, cardValues : Map<String, St
         (1+index) * triple.third }.sum()
 }
 
-fun String.convertHand(map : Map<String, String>) : String {
+private fun String.convertHand(map : Map<String, String>) : String {
     return this.map { it.toString() }.joinToString(separator = "") { map[it]!!}
 }
 
-fun getHandType(hand : String, jokerRules: Boolean) : Int {
+private fun getHandType(hand : String, jokerRules: Boolean) : Int {
     val cardGroup = hand.groupingBy { it }.eachCount().map { Pair(it.key, it.value) }.sortedByDescending { it.second }.toMutableList()
 
     if(jokerRules){

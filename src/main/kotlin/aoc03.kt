@@ -1,3 +1,5 @@
+package main.kotlin
+
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -5,7 +7,7 @@ fun main(args: Array<String>) {
     println(getPart32())
 }
 
-fun getPart31() : Int {
+private fun getPart31() : Int {
     val input = File("input03.txt").readLines()
     val numberRegex = Regex("\\d+")
     val specialSignRegex = Regex("[^A-Za-z0-9.\\n]")
@@ -34,7 +36,7 @@ fun getPart31() : Int {
     return sum
 }
 
-fun getPart32(): Int {
+private fun getPart32(): Int {
     val input = File("input03.txt").readLines()
     val numberRegex = Regex("\\d+")
     val gearRegex = Regex("\\*")
@@ -69,7 +71,7 @@ fun getPart32(): Int {
     return sum
 }
 
-fun getSearchString(range : IntRange, input : String, expand: Boolean = false) : String {
+private fun getSearchString(range : IntRange, input : String, expand: Boolean = false) : String {
     var searchRange = IntRange(0.coerceAtLeast(range.first-1), (input.length-1).coerceAtMost(range.last+1))
     if(expand){
         var min = range.first

@@ -1,3 +1,5 @@
+package main.kotlin
+
 import java.io.File
 
 
@@ -6,7 +8,7 @@ fun main(args: Array<String>) {
     println(getPart62())
 }
 
-fun getPart61(): Int {
+private fun getPart61(): Int {
     val input = File("input06.txt").readLines()
     val re = Regex("\\d+")
     val data = input.map { line -> re.findAll(line).toList().map { it.value.toInt() }}
@@ -27,7 +29,7 @@ fun getPart61(): Int {
     return sum.reduce{acc, i -> acc * i}
 }
 
-fun getPart62(): Int {
+private fun getPart62(): Int {
     val input = File("input06.txt").readText().replace(" ", "")
     val re = Regex("\\d+")
     val (time, distance) = re.findAll(input).map { it.value.toLong() }.toList()

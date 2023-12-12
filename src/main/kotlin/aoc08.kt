@@ -1,13 +1,13 @@
+package main.kotlin
+
 import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     println(getPart81())
     println(getPart82())
 }
 
-fun getPart81(): Int {
+private fun getPart81(): Int {
 
     val input = File("input08.txt").readText()
     val instructions = input.substringBefore("\r").toList()
@@ -24,7 +24,7 @@ fun getPart81(): Int {
     return sum
 }
 
-fun getPart82(): Long {
+private fun getPart82(): Long {
     val input = File("input08.txt").readText()
     val instructions = input.substringBefore("\r").toList()
     val networks = Regex("\\w+(?=.*\\))").findAll(input).map { it.value }.chunked(3).associate { Pair(it[0], Pair(it[1], it[2])) }
@@ -47,7 +47,7 @@ fun getPart82(): Long {
     return findLCMOfListOfNumbers(indexes.map { it.toLong() })
 }
 
-fun findLCM(a: Long, b: Long): Long {
+private fun findLCM(a: Long, b: Long): Long {
     val larger = if (a > b) a else b
     val maxLcm = a * b
     var lcm = larger
@@ -60,7 +60,7 @@ fun findLCM(a: Long, b: Long): Long {
     return maxLcm
 }
 
-fun findLCMOfListOfNumbers(numbers: List<Long>): Long {
+private fun findLCMOfListOfNumbers(numbers: List<Long>): Long {
     var result = numbers[0]
     for (i in 1..<numbers.size) {
         result = findLCM(result, numbers[i])

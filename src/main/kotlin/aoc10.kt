@@ -1,3 +1,5 @@
+package main.kotlin
+
 import java.awt.Point
 import java.io.File
 
@@ -10,11 +12,11 @@ val pipeMap = mapOf(
     'F' to (Point(0, 1) to Point(1, 0)),
 )
 
-fun Point.move(input : Point) : Point {
+private fun Point.move(input : Point) : Point {
     return Point(this.x + input.x, this.y + input.y)
 }
 
-fun getStartMoves(start : Point, input: Map<Point, Pair<Point, Point>>) : Pair<Point, Point> {
+private fun getStartMoves(start : Point, input: Map<Point, Pair<Point, Point>>) : Pair<Point, Point> {
     return input.entries.filter {
         start == it.value.first || start == it.value.second
     }.zipWithNext().map { it.first.key to it.second.key }.single()
@@ -59,12 +61,12 @@ fun main(args: Array<String>) {
     println(getPart101(start, map))
     println(getPart102(start, map))
 }
-fun getPart101(start : Point, input: Map<Point, Pair<Point, Point>>): Int {
+private fun getPart101(start : Point, input: Map<Point, Pair<Point, Point>>): Int {
     return marioTime(start, start, start, input, 0) / 2
 
 }
 
-fun getPart102(start : Point, input: Map<Point, Pair<Point, Point>>): Long {
+private fun getPart102(start : Point, input: Map<Point, Pair<Point, Point>>): Long {
     val output = input.map { it.key to 0 }.toMap().toMutableMap()
     marioTime2(start, start, start, input, output)
     output.map {
