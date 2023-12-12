@@ -1,6 +1,5 @@
 import java.awt.Point
 import java.io.File
-import java.util.*
 
 val pipeMap = mapOf(
     '|' to (Point(0, -1) to Point(0, 1)),
@@ -9,19 +8,11 @@ val pipeMap = mapOf(
     'J' to (Point(0, -1) to Point(-1, 0)),
     '7' to (Point(0, 1) to Point(-1, 0)),
     'F' to (Point(0, 1) to Point(1, 0)),
-    //'S' to (Point(0, -1) to Point(-1, 0)), //input
-    //'S' to (Point(1, 0) to Point(0, 1)), //demo
-
 )
 
 fun Point.move(input : Point) : Point {
     return Point(this.x + input.x, this.y + input.y)
 }
-
-fun Point.isDot(input : Pair<Point, Point>) : Boolean {
-    return this == input.first && this == input.second
-}
-
 
 fun getStartMoves(start : Point, input: Map<Point, Pair<Point, Point>>) : Pair<Point, Point> {
     return input.entries.filter {
@@ -31,31 +22,22 @@ fun getStartMoves(start : Point, input: Map<Point, Pair<Point, Point>>) : Pair<P
 
 tailrec fun marioTime(start : Point, current : Point, last : Point, pipeRoutes : Map<Point, Pair<Point, Point>>, sum : Int) : Int {
     if(start == current && sum > 0) return sum
-    val routes = pipeRoutes[current]!!
-    return if(routes.first == last) {
-        marioTime(start, routes.second, current, pipeRoutes, sum+1)
-    } else {
-        marioTime(start, routes.first, current, pipeRoutes, sum+1)
-    }
+    val route = if(pipeRoutes[current]!!.first == last) pipeRoutes[current]!!.second else pipeRoutes[current]!!.first
+    return marioTime(start, route, current, pipeRoutes, sum+1)
 }
 
-fun marioTime2(start : Point, current : Point, last : Point, pipeRoutes : Map<Point, Pair<Point, Point>>, output : MutableMap<Point, Int>)  {
+tailrec fun marioTime2(start : Point, current : Point, last : Point, pipeRoutes : Map<Point, Pair<Point, Point>>, output : MutableMap<Point, Int>)  {
     if(start == current && output[start]!! >= 1) return
-    val routes = pipeRoutes[current]!!
-    if(routes.first == last) {
-        output[current] = 1
-        marioTime2(start, routes.second, current, pipeRoutes, output)
-    } else {
-        output[current] = 1
-        marioTime2(start, routes.first, current, pipeRoutes, output)
-    }
+    val route = if(pipeRoutes[current]!!.first == last) pipeRoutes[current]!!.second else pipeRoutes[current]!!.first
+    output[current] = 1
+    marioTime2(start, route, current, pipeRoutes, output)
 }
 
 fun main(args: Array<String>) {
-    val input = File("input10.txt").readText()
+    val input = File("input10demo2.txt").readText()
     var start = Point()
 
-    val map = input.split("\n").flatMapIndexed { y, line ->
+    val map = input.split("\r\n").flatMapIndexed { y, line ->
         line.mapIndexedNotNull { x, char ->
             val point = Point(x, y)
             when (char) {
@@ -74,7 +56,7 @@ fun main(args: Array<String>) {
         }
     }.toMap().toMutableMap()
     map[start] = getStartMoves(start, map)
-    //println(getPart101(start, map))
+    println(getPart101(start, map))
     println(getPart102(start, map))
 }
 fun getPart101(start : Point, input: Map<Point, Pair<Point, Point>>): Int {
@@ -87,6 +69,7 @@ fun getPart102(start : Point, input: Map<Point, Pair<Point, Point>>): Long {
     marioTime2(start, start, start, input, output)
     output.map {
         it.value
-    }.chunked(140).forEach{ println(it) }
+    }
+
     return 0
 }
