@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="github.curious.odd.man.rgxgen" type="repository">
+    <properties maven-id="com.github.curious-odd-man:rgxgen:1.4" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/rgxgen-1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

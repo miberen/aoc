@@ -17,58 +17,25 @@ private fun getPart121(input: List<Pair<String, List<Int>>>): Int {
             if(errorInfo.count()-1 == index) "#{$s}"
             else "#{$s}\\.+"
         }.reduce { acc, i -> acc + i}
-        val solutionRegex = Regex("[\\n|.]$regexString(?=[\\n|.])")
+        val solutionRegex = Regex("\\.*$regexString\\.*")
 
         val groups = Regex("\\.+|#+|\\?+").findAll(string).toList()
         val permutations = generateCombinations(listOf(".", "#"), groups)
         val cartesianProduct = cartesianProductAsString(permutations).reduce { acc, s ->
             acc + "\n" + s
         }
-        val result = solutionRegex.findAll(cartesianProduct).count()
-        println(string)
-        println(result)
+
+        val result = solutionRegex.findAll(cartesianProduct).filter { it.value.length == string.length }.count()
+        println("${cartesianProduct.count()} : $string : $result : $errorInfo")
+
         result
 
     }.reduce(Integer::sum)
 
-//
-//    val possibilities = input.map { (string, errorInfo) ->
-//        val regexString = errorInfo.map { it.toString() }.mapIndexed { index, s ->
-//            if(errorInfo.count()-1 == index) "#{$s}"
-//            else "#{$s}\\.+"
-//        }.reduce { acc, i -> acc + i}
-//        val solutionRegex = Regex("[\\n|.]$regexString(?=[\\n|.])")
-//
-//        val groups = Regex("\\.+|#+|\\?+").findAll(string).toList()
-//        val permutations = generateCombinations(listOf(".", "#"), groups)
-//        val cartesianProduct = cartesianProductAsString(permutations).reduce { acc, s ->
-//            acc + "\n" + s
-//        }
-//        val result = solutionRegex.findAll(cartesianProduct).count()
-//        println(string)
-//        println(result)
-//        result
-//
-//    }.sum()
 
     return possibilities1.get()
 }
 
-fun cartesianProduct(lists: List<List<String>>): List<List<String>> {
-    if (lists.any { it.isEmpty() }) return emptyList()
-
-    var result: List<List<String>> = listOf(emptyList())
-
-    for (list in lists) {
-        result = list.flatMap { element ->
-            result.map { existingList ->
-                existingList + element
-            }
-        }
-    }
-
-    return result
-}
 fun cartesianProductAsString(lists: List<List<String>>): Set<String> {
     if (lists.any { it.isEmpty() }) return emptySet()
 
