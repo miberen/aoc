@@ -12,7 +12,7 @@ fun main(args: Array<String>) {
     println(getPart122(input))
 }
 private fun getPart121(input: List<Pair<String, List<Int>>>): Int {
-    val possibilities = input.map { (string, errorInfo) ->
+    val possibilities1 = input.parallelStream().map { (string, errorInfo) ->
         val regexString = errorInfo.map { it.toString() }.mapIndexed { index, s ->
             if(errorInfo.count()-1 == index) "#{$s}"
             else "#{$s}\\.+"
@@ -24,12 +24,34 @@ private fun getPart121(input: List<Pair<String, List<Int>>>): Int {
         val cartesianProduct = cartesianProductAsString(permutations).reduce { acc, s ->
             acc + "\n" + s
         }
-        println(solutionRegex.findAll(cartesianProduct).count())
-        solutionRegex.findAll(cartesianProduct).count()
+        val result = solutionRegex.findAll(cartesianProduct).count()
+        println(string)
+        println(result)
+        result
 
-    }.sum()
+    }.reduce(Integer::sum)
 
-    return possibilities
+//
+//    val possibilities = input.map { (string, errorInfo) ->
+//        val regexString = errorInfo.map { it.toString() }.mapIndexed { index, s ->
+//            if(errorInfo.count()-1 == index) "#{$s}"
+//            else "#{$s}\\.+"
+//        }.reduce { acc, i -> acc + i}
+//        val solutionRegex = Regex("[\\n|.]$regexString(?=[\\n|.])")
+//
+//        val groups = Regex("\\.+|#+|\\?+").findAll(string).toList()
+//        val permutations = generateCombinations(listOf(".", "#"), groups)
+//        val cartesianProduct = cartesianProductAsString(permutations).reduce { acc, s ->
+//            acc + "\n" + s
+//        }
+//        val result = solutionRegex.findAll(cartesianProduct).count()
+//        println(string)
+//        println(result)
+//        result
+//
+//    }.sum()
+
+    return possibilities1.get()
 }
 
 fun cartesianProduct(lists: List<List<String>>): List<List<String>> {
