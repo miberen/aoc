@@ -58,7 +58,7 @@ private fun getExpansionY(input: List<String>, currentPoint : Int, oldUniverse :
 
 private fun rot90Deg(strings: List<String>): MutableList<String>  {
     val maxLength = strings.maxOfOrNull { it.length } ?: return mutableListOf()
-    return (0 until maxLength).map { i ->
+    return (0..<maxLength).map { i ->
         strings.map { it.getOrNull(i) ?: ' ' }.reversed().joinToString("")
     }.toMutableList()
 }

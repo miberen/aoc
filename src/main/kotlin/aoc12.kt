@@ -59,7 +59,6 @@ fun generateCombinations(strings: List<String>, ranges: List<MatchResult>): List
         }
     }
     return ranges.map { matchResult ->
-
         if(matchResult.value.contains("?"))
             generatePermutations(strings, matchResult.range.last - matchResult.range.first + 1)
         else
