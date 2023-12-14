@@ -1,11 +1,12 @@
 package main.kotlin
 import java.io.File
+import kotlin.math.ceil
 
 data class Pattern (val normal: Map<Int, String>, val rotated : Map<Int, String>)
 
 fun main(args: Array<String>) {
 
-    val input = File("input13.txt").readText().split("\r\n\r\n").map { pattern ->
+    val input = File("input13demo.txt").readText().split("\r\n\r\n").map { pattern ->
         val normal = pattern.lines().mapIndexed { y, s ->
             y to s
         }.toMap()
