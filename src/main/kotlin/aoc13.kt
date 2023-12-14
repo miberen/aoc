@@ -1,12 +1,11 @@
 package main.kotlin
 import java.io.File
-import kotlin.math.ceil
 
 data class Pattern (val normal: Map<Int, String>, val rotated : Map<Int, String>)
 
 fun main(args: Array<String>) {
 
-    val input = File("input13demo.txt").readText().split("\r\n\r\n").map { pattern ->
+    val input = File("input13.txt").readText().split("\r\n\r\n").map { pattern ->
         val normal = pattern.lines().mapIndexed { y, s ->
             y to s
         }.toMap()
@@ -17,7 +16,7 @@ fun main(args: Array<String>) {
     }
 
     println(getPart131(input))
-    //println("\n" + getPart132(input))
+    println(getPart132(input))
 }
 private fun getPart131(input: List<Pattern>): Int {
     return input.sumOf { (normal, rotated) ->
@@ -25,7 +24,9 @@ private fun getPart131(input: List<Pattern>): Int {
         getMirror(normal).takeIf { it != 0 } ?: getMirror(rotated, false)
     }
 }
-
+private fun getPart132(input: List<Pattern>): Long {
+  return 0
+}
 private fun getMirror(pattern : Map<Int, String>, scanForHorizontalMirror : Boolean = true) : Int {
     val max = pattern.keys.max()
     for (i in 0..max) {
@@ -42,9 +43,11 @@ private fun getMirror(pattern : Map<Int, String>, scanForHorizontalMirror : Bool
     return 0
 }
 
-private fun getPart132(input: List<Pair<String, List<Int>>>): Long {
-    return 0
+private fun carefulForceMirrorSmudges() {
+
 }
+
+
 
 private fun rot90Deg(strings: List<String>): MutableList<String>  {
     val maxLength = strings.maxOfOrNull { it.length } ?: return mutableListOf()
