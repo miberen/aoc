@@ -1,12 +1,11 @@
 package main.kotlin
 import java.io.File
-import kotlin.math.ceil
 
 data class Pattern (val normal: Map<Int, String>, val rotated : Map<Int, String>)
 
 fun main(args: Array<String>) {
 
-    val input = File("input13demo.txt").readText().split("\r\n\r\n").map { pattern ->
+    val input = File("input13.txt").readText().split("\r\n\r\n").map { pattern ->
         val normal = pattern.lines().mapIndexed { y, s ->
             y to s
         }.toMap()
@@ -21,28 +20,25 @@ fun main(args: Array<String>) {
 }
 private fun getPart131(input: List<Pattern>): Int {
     return input.sumOf { (normal, rotated) ->
-        println("new pattern")
+        println("New pattern ${input.indexOfLast { it.normal == normal }+1}")
         getMirror(normal).takeIf { it != 0 } ?: getMirror(rotated, false)
     }
 }
 
-private fun getMirror(pattern : Map<Int, String>, horizontal : Boolean = true) : Int {
-    println("new rotation")
+private fun getMirror(pattern : Map<Int, String>, scanForHorizontalMirror : Boolean = true) : Int {
     val max = pattern.keys.max()
-    var result = 0
     for (i in 0..max) {
         var sum = 0
         while (pattern[i - sum] == pattern[i + 1 + sum]) {
-            println("${pattern[i - sum]} ${pattern[i + 1 + sum]}")
             sum++
-            if (sum >= ceil((max / 2f).toDouble())) {
-                println(sum)
-                result = (sum + 1) * if(horizontal) 100 else 1
-                break
+            if((i-sum == -1 || i+sum == max) ) {
+                val result = (i+1) * if(scanForHorizontalMirror) 100 else 1
+                println("${if (scanForHorizontalMirror) "HOR" else "VER"}\n${pattern[i]}\n${pattern[i + 1]} Sum: $sum It: $i ItCheck: ${i-sum} Max: $max MaxCheck: ${i+sum} Result: $result \n")
+                return result
             }
         }
     }
-    return result
+    return 0
 }
 
 private fun getPart132(input: List<Pair<String, List<Int>>>): Long {
