@@ -20,7 +20,7 @@ private fun getPart112(input : List<String>): Long {
         abs(abs(points.first.y-points.second.y) + abs(points.first.x-points.second.x))
     }
 }
-data class Point(val x: Long, val y: Long) {
+private data class Point(val x: Long, val y: Long) {
     constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
 }
 private fun getStarList(input: List<String>, oldUniverse: Boolean = false): List<Point> {
