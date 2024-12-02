@@ -1,7 +1,7 @@
 package main.kotlin
 import java.io.File
 
-data class Pattern (val normal: Map<Int, String>, val rotated : Map<Int, String>)
+private data class Pattern (val normal: Map<Int, String>, val rotated : Map<Int, String>)
 
 fun main(args: Array<String>) {
 
@@ -46,8 +46,6 @@ private fun getMirror(pattern : Map<Int, String>, scanForHorizontalMirror : Bool
 private fun carefulForceMirrorSmudges() {
 
 }
-
-
 
 private fun rot90Deg(strings: List<String>): MutableList<String>  {
     val maxLength = strings.maxOfOrNull { it.length } ?: return mutableListOf()
